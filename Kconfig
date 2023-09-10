@@ -1,0 +1,12 @@
+mainmenu "HealthyPi Project Configuration"
+
+config HEALTHYPI_ESP_FW_VERSION
+    string "Firmware Version"
+    default "--"
+    help
+      Version name for display 
+
+config HEALTHYPI_LOG_ENABLED
+    bool "Enable logs"
+    
+source "Kconfig.zephyr"
