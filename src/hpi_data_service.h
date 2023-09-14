@@ -9,8 +9,8 @@
 #include <zephyr/bluetooth/services/bas.h>
 #include <zephyr/bluetooth/services/hrs.h>
 
-int wiser_service_init(void);
-void wiser_service_send(struct bt_conn *conn, const uint8_t *data, uint16_t len);
+int hpi_service_init(void);
+void hpi_service_send(struct bt_conn *conn, const uint8_t *data, uint16_t len);
 void send_progress_ble(uint16_t prog_time, uint16_t prog_curr, uint16_t prog_imped);
 void send_data_ble(uint8_t *data, uint16_t len);
 

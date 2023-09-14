@@ -101,7 +101,7 @@ BT_GATT_SERVICE_DEFINE(wiser_service,
 given that the Client Characteristic Control Descripter has been set to Notify (0x1).
 It also calls the on_sent() callback if successful*/
 
-void wiser_service_send(struct bt_conn *conn, const uint8_t *data, uint16_t len)
+void hpi_service_send(struct bt_conn *conn, const uint8_t *data, uint16_t len)
 {
     /*
     The attribute for the TX characteristic is used with bt_gatt_is_subscribed
@@ -146,7 +146,7 @@ void send_progress_ble(uint16_t prog_time, uint16_t prog_curr, uint16_t prog_imp
 
     if (current_conn)
     {
-        wiser_service_send(current_conn, data, 6);
+        hpi_service_send(current_conn, data, 6);
     }
 }
 
@@ -154,10 +154,10 @@ void send_data_ble(uint8_t *data, uint16_t len)
 {
     if (current_conn)
     {
-        wiser_service_send(current_conn, data, len);
+        hpi_service_send(current_conn, data, len);
     }
 }
-int wiser_service_init(void)
+int hpi_service_init(void)
 {
     int err = 0;
 
