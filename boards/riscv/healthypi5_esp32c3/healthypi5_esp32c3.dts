@@ -6,7 +6,7 @@
 
 /dts-v1/;
 
-#include <espressif/esp32c3/esp32c3_mini_n4.dtsi>
+#include <espressif/esp32c3.dtsi>
 #include "healthypi5_esp32c3-pinctrl.dtsi"
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 
@@ -27,6 +27,22 @@
 		watchdog0 = &wdt0;
 
 		rp-uart=&uart1;
+	};
+
+	power-states {
+		light_sleep: light_sleep {
+			compatible = "zephyr,power-state";
+			power-state-name = "standby";
+			min-residency-us = <200>;
+			exit-latency-us = <60>;
+		};
+
+		deep_sleep: deep_sleep {
+			compatible = "zephyr,power-state";
+			power-state-name = "soft-off";
+			min-residency-us = <660>;
+			exit-latency-us = <105>;
+		};
 	};
 
 	gpio_keys {
