@@ -160,7 +160,7 @@ void set_ble_name()
 
 	char addr_str[50];
 	size_t add_str_len;
-	char dev_name[30] = "WISER-";
+	char dev_name[30] = "HPI5-";
 
 	bt_id_get(&addrs, &count);
 
