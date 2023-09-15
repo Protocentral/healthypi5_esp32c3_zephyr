@@ -6,4 +6,3 @@
 config BOARD_HEALTHYPI5_ESP32C3
 	bool "HealthyPi 5 ESP32C3 Co-processor"
 	depends on SOC_ESP32C3
-#	select CONSOLE_HAS_DRIVER
