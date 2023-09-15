@@ -29,7 +29,8 @@ void main(void)
 {
 	int rc;
 
-	k_sleep(K_SECONDS(5));
+	// Delay introduced only to allow logs to be printed on USB CDC
+	//k_sleep(K_SECONDS(5));
 
 	rc = fs_mount(&littlefs_mnt);
 	if (rc < 0)
