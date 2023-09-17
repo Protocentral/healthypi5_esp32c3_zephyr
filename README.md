@@ -1,4 +1,4 @@
-# HealthyPi 5 ESP32C3 Zephyr Firmware (Wireless Chip only)
+# HealthyPi 5 Zephyr Firmware for ESP32C3 Wireless Co-processor
 
 ![HealthyPi 5](docs/images/healthypi5.jpg)
 
