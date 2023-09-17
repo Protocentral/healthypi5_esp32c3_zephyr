@@ -13,6 +13,8 @@
 #include "cmd_module.h"
 #include "ble_module.h"
 
+#include <zephyr/mgmt/mcumgr/smp/smp_client.h>
+
 LOG_MODULE_REGISTER(ble_backend);
 
 #define STORAGE_PARTITION_LABEL storage_partition
