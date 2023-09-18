@@ -7,4 +7,3 @@
 /** @file
  * @brief Custom SMP Client to program another Zephyr device through SMP MCU Manager
  */
- */
