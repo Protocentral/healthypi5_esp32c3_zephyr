@@ -1,0 +1,1 @@
+void fs_module_init(void);

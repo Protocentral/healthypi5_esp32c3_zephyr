@@ -128,10 +128,11 @@
 				label = "image-scratch";
 				reg = <0x00210000 0x00040000>;
 		 };
- 
+		
+		 // 1.5 MB LFS Storage partition
 		 storage_partition: partition@250000 {
 			 label = "storage";
-			 reg = <0x00250000 0x00006000>;
+			 reg = <0x00250000 0x1B0000>;
 		 };
 	 };
  }; 
