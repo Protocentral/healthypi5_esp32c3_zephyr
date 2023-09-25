@@ -28,3 +28,6 @@ struct smp_packet{
     struct smp_header header;
     uint8_t payload[0];
 };
+
+void smp_uart_send_uart(uint8_t *buf, uint8_t buf_size);
+void smp_uart_send_cmd(uint8_t group_id, uint8_t op_id, uint8_t cmd_id);
