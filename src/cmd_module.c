@@ -5,6 +5,7 @@
 
 #include "hpi_data_service.h"
 #include "cmd_module.h"
+#include "pc_smp_uart_client.h"
 
 #define MAX_MSG_SIZE 32
 
@@ -253,6 +254,8 @@ static void cmd_init(void)
         return;
     }
     uart_irq_rx_enable(uart_dev);
+
+    smp_mcu_reset();
 }
 
 void cmd_thread(void)

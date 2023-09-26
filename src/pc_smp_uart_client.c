@@ -19,11 +19,11 @@
 #include "pc_smp_uart_client.h"
 
 #define UART_MTU_SIZE 128
-uint8_t enc_buffer[UART_MTU_SIZE];
-
 #define UART_DEVICE_NODE DT_ALIAS(rp_uart)
 
 static const struct device *const uart_dev = DEVICE_DT_GET(UART_DEVICE_NODE);
+
+uint8_t smp_seq_num = 0;
 
 void smp_mcu_reset(void)
 {
@@ -43,6 +43,8 @@ void smp_mcu_reset(void)
     zassert_equal(MGMT_ERR_EOK, rc, "Expected to receive %d response %d", MGMT_ERR_EOK, rc);]
 
     */
+    printk("Resetting device\n");
+    smp_uart_send_cmd(MGMT_GROUP_ID_OS, OS_MGMT_ID_RESET, MGMT_OP_WRITE);
 }
 
 void smp_uart_send_cmd(uint8_t group_id, uint8_t op_id, uint8_t cmd_id)
@@ -59,22 +61,30 @@ void smp_uart_send_cmd(uint8_t group_id, uint8_t op_id, uint8_t cmd_id)
     pkt->header.flags=0;
     pkt->header.len=0;
 
+    printk("Sending cmd: %X\n", cmd_id);
+
+    for(int i=0; i<sizeof(struct smp_packet_t); i++)
+        printk("%X ", pkt_buffer[i]);
+    printk("\n");
     smp_uart_send_uart(pkt_buffer, sizeof(struct smp_packet_t));
 }
+
+char enc_buffer[UART_MTU_SIZE];
 
 void smp_uart_send_uart(uint8_t *buf, uint8_t buf_size)
 {
     int rc;
-	const unsigned char *src;
+    uint8_t olen=0;
 
-    src = buf;
-    rc = base64_encode(enc_buffer, sizeof(enc_buffer), &src, buf_size, 64);
+    rc = base64_encode(enc_buffer, sizeof(enc_buffer), &olen, buf, buf_size);
     if (rc < 0) {
         printk("Error encoding base64\n");
         return;
     }
 
     printk("Encoded: %s\n", enc_buffer);
+    printk("Encoded len: %d\n", olen);
+
     //uart_poll_out(uart_dev, enc_buffer);
 
 }
