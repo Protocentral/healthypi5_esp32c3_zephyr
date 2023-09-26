@@ -12,7 +12,7 @@ enum smp_uart_op_t{
     MGMT_OP_WRITE_RSP = 0x3,
 };
 
-struct smp_header{
+struct smp_header_t{
     uint8_t res:3;
     uint8_t ver:2;
     uint8_t op:3;
@@ -24,9 +24,9 @@ struct smp_header{
     uint8_t id;
 };
 
-struct smp_packet{
-    struct smp_header header;
-    uint8_t payload[0];
+struct smp_packet_t {
+    struct smp_header_t header;
+    uint8_t payload;
 };
 
 void smp_uart_send_uart(uint8_t *buf, uint8_t buf_size);

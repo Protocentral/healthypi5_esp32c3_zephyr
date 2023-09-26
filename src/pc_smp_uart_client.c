@@ -21,6 +21,10 @@
 #define UART_MTU_SIZE 128
 uint8_t enc_buffer[UART_MTU_SIZE];
 
+#define UART_DEVICE_NODE DT_ALIAS(rp_uart)
+
+static const struct device *const uart_dev = DEVICE_DT_GET(UART_DEVICE_NODE);
+
 void smp_mcu_reset(void)
 {
     /*int rc;
@@ -43,7 +47,19 @@ void smp_mcu_reset(void)
 
 void smp_uart_send_cmd(uint8_t group_id, uint8_t op_id, uint8_t cmd_id)
 {
-   uint8_t pkt_buffer[]
+    uint8_t pkt_buffer[UART_MTU_SIZE];
+
+    struct smp_packet_t *pkt = (struct smp_packet_t *)pkt_buffer;
+    //pkt.header.res = 0;
+    pkt->header.group = group_id;
+    pkt->header.op = op_id;
+    pkt->header.id = cmd_id;
+
+    pkt->header.ver=0;
+    pkt->header.flags=0;
+    pkt->header.len=0;
+
+    smp_uart_send_uart(pkt_buffer, sizeof(struct smp_packet_t));
 }
 
 void smp_uart_send_uart(uint8_t *buf, uint8_t buf_size)
@@ -52,13 +68,13 @@ void smp_uart_send_uart(uint8_t *buf, uint8_t buf_size)
 	const unsigned char *src;
 
     src = buf;
-    rc = base64_encode(enc_buffer, sizeof(enc_buffer), &src, buf_size);
+    rc = base64_encode(enc_buffer, sizeof(enc_buffer), &src, buf_size, 64);
     if (rc < 0) {
         printk("Error encoding base64\n");
         return;
     }
 
     printk("Encoded: %s\n", enc_buffer);
-    uart_poll_out(uart_dev, enc_buffer, rc);
+    //uart_poll_out(uart_dev, enc_buffer);
 
 }
