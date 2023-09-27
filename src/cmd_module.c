@@ -255,7 +255,9 @@ static void cmd_init(void)
     }
     uart_irq_rx_enable(uart_dev);
 
-    smp_mcu_reset();
+    //smp_mcu_reset();
+    //pc_smp_image_upload();
+    //pc_smp_get_image_state();
 }
 
 void cmd_thread(void)

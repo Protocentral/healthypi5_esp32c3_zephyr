@@ -60,7 +60,7 @@ enum mcumgr_op_t {
 
 /**
  * Command IDs for OS management group.
- */
+ 
 #define OS_MGMT_ID_ECHO			0
 #define OS_MGMT_ID_CONS_ECHO_CTRL	1
 #define OS_MGMT_ID_TASKSTAT		2
@@ -86,6 +86,8 @@ struct smp_packet_t {
     struct smp_header_t header;
     uint8_t payload;
 };
-
+*/
 void smp_uart_send_uart(uint8_t *buf, uint8_t buf_size);
 void smp_uart_send_cmd(uint8_t group_id, uint8_t op_id, uint8_t cmd_id);
+void pc_smp_image_upload(void);
+void pc_smp_get_image_state(void);

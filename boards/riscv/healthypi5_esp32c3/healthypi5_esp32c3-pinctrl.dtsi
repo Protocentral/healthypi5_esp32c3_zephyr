@@ -20,7 +20,7 @@
 		};
 	};
 
-	/*uart1_default: uart1_default {
+	uart1_default: uart1_default {
 		group1 {
 			pinmux = <UART1_TX_GPIO6>;
 		};
@@ -29,7 +29,7 @@
 			//input-enable;
 			bias-pull-up;
 		};
-	};*/
+	};
 
 	
 	spim2_default: spim2_default {
