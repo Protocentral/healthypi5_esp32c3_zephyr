@@ -27,16 +27,10 @@ enum cmdsm_index {
     CES_CMDIF_PKT_OVERHEAD,
 };
 
-enum wiser_cmds {
-    WISER_CMD_SAVE_TDCS_SESSION = 0x20,
-    WISER_CMD_SAVE_TPCS_SESSION = 0x21,
-
-    WISER_GET_SESSION = 0x30,
-    
-    CMD_OTA_TDCS = 0x02,
-    WISER_CMD_STOP = 0xF0,
-    TDCS_CMD_PAUSE = 0x05,
-    TDCS_CMD_RESUME = 0x06,
+enum hpi_cmds
+{
+    HPI_CMD_GET_DEVICE_STATUS = 0x40,
+    HPI_CMD_RESET = 0x41,
 };
 
 enum cmdif_pkt_type

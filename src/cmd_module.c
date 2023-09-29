@@ -2,10 +2,16 @@
 #include <zephyr/logging/log.h>
 #include <zephyr/device.h>
 #include <zephyr/drivers/uart.h>
+#include <zephyr/drivers/gpio.h>
 
 #include "hpi_data_service.h"
 #include "cmd_module.h"
 #include "pc_smp_uart_client.h"
+#include <zephyr/drivers/led.h>
+
+#include "hw_module.h"
+
+LOG_MODULE_REGISTER(cmd_module);
 
 #define MAX_MSG_SIZE 32
 
@@ -90,9 +96,9 @@ void ces_parse_packet(char rxch)
                 cmd_pkt_data_counter = 0;
                 ecs_rx_state = 0;
                 cmd_data_obj.pkt_type = cmd_pkt_pkttype;
-                cmd_data_obj.data_len = cmd_pkt_len+1; //+1 for the packet type
+                cmd_data_obj.data_len = cmd_pkt_len + 1; //+1 for the packet type
 
-                memcpy(cmd_data_obj.data, ces_pkt_data_buffer, cmd_pkt_len+1);
+                memcpy(cmd_data_obj.data, ces_pkt_data_buffer, cmd_pkt_len + 1);
 
                 k_fifo_put(&cmd_data_fifo, &cmd_data_obj);
             }
@@ -116,7 +122,7 @@ void cmdif_send_uart(char *buf, uint8_t buf_size)
 
     for (int i = 0; i < buf_size; i++)
     {
-        //printk("S %x\n", buf[i]);
+        // printk("S %x\n", buf[i]);
         uart_poll_out(uart_dev, buf[i]);
         k_sleep(K_USEC(100));
     }
@@ -186,6 +192,27 @@ void send_data_serial(uint8_t *in_data_buf, uint8_t in_data_len)
 }
 
 
+
+void send_cmdif_cmd_reset_rp(void)
+{
+    uint8_t dataPacket[10];
+
+    dataPacket[0] = CES_CMDIF_PKT_START_1;
+    dataPacket[1] = CES_CMDIF_PKT_START_2;
+    dataPacket[2] = 1;
+    dataPacket[3] = 0;
+    dataPacket[4] = CES_CMDIF_TYPE_CMD;
+
+    dataPacket[5] = HPI_CMD_RESET;
+
+    dataPacket[6] = CES_CMDIF_PKT_STOP_1;
+    dataPacket[7] = CES_CMDIF_PKT_STOP_2;
+
+    printk("Sending CMD Reset\n");
+
+    cmdif_send_uart(dataPacket, 8);
+}
+
 void send_status_serial(uint8_t in_status_buf)
 {
     uint8_t dataPacket[50];
@@ -226,6 +253,8 @@ void cmd_serial_cb(const struct device *dev, void *user_data)
 
 static void cmd_init(void)
 {
+    int ret=0;
+
     printk("CMD Module Init\n");
 
     if (!device_is_ready(uart_dev))
@@ -235,7 +264,7 @@ static void cmd_init(void)
     }
 
     /* configure interrupt and callback to receive data */
-    int ret = uart_irq_callback_user_data_set(uart_dev, cmd_serial_cb, NULL);
+    ret = uart_irq_callback_user_data_set(uart_dev, cmd_serial_cb, NULL);
 
     if (ret < 0)
     {
@@ -255,10 +284,12 @@ static void cmd_init(void)
     }
     uart_irq_rx_enable(uart_dev);
 
-    //smp_mcu_reset();
-    //pc_smp_image_upload();
+    // smp_mcu_reset();
+    // pc_smp_image_upload();
+    
     k_sleep(K_MSEC(5000));
-    pc_smp_get_image_state();
+    send_cmdif_cmd_reset_rp();
+    //pc_smp_get_image_state();
 }
 
 void cmd_thread(void)
@@ -277,7 +308,7 @@ void cmd_thread(void)
 
         if (rx_cmd_data_obj->pkt_type == CES_CMDIF_TYPE_DATA)
         {
-            //hpi_decode_data_packet(rx_cmd_data_obj->data, rx_cmd_data_obj->data_len);
+            // hpi_decode_data_packet(rx_cmd_data_obj->data, rx_cmd_data_obj->data_len);
         }
         else if (rx_cmd_data_obj->pkt_type == CES_CMDIF_TYPE_STATUS)
         {
@@ -286,14 +317,16 @@ void cmd_thread(void)
         else if (rx_cmd_data_obj->pkt_type == CES_CMDIF_TYPE_PROGRESS)
         {
             send_data_ble(rx_cmd_data_obj->data, rx_cmd_data_obj->data_len);
-            //hpi_decode_progress_packet(rx_cmd_data_obj->data, rx_cmd_data_obj->data_len);
-            // printk("Recd Progress Data\n");
-            // hpi_decode_command(rx_cmd_data_obj->data[0]);
+            // hpi_decode_progress_packet(rx_cmd_data_obj->data, rx_cmd_data_obj->data_len);
+            //  printk("Recd Progress Data\n");
+            //  hpi_decode_command(rx_cmd_data_obj->data[0]);
         }
         else
         {
             printk("Recd Unknown Data\n");
         }
+
+
 
         k_sleep(K_MSEC(1000));
     }

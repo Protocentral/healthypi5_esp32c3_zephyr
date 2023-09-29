@@ -1,3 +1,6 @@
 {
-    "cmake.configureOnOpen": false
+    "cmake.configureOnOpen": false,
+    "files.associations": {
+        "healthypi5_esp32c3_defconfig": "c"
+    }
 }

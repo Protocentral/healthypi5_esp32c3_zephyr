@@ -22,16 +22,17 @@ void main(void)
 {
 	int rc;
 
+	printk("HealthyPi App started!\n");
+
 	// Delay introduced only to allow logs to be printed on USB CDC
 	//k_sleep(K_SECONDS(5));
 
 	fs_module_init();
 
 	//Init BLE module
-	ble_module_init();
+	//ble_module_init();
 
-	printk("HealthyPi App started!\n");
-
+	
 	while (1)
 	{
 		k_sleep(K_MSEC(1000));

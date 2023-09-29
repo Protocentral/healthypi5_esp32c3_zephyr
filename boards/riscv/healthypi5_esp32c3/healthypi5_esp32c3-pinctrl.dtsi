@@ -26,6 +26,7 @@
 		};
 		group2 {
 			pinmux = <UART1_RX_GPIO7>;
+			
 			//input-enable;
 			bias-pull-up;
 		};
