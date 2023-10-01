@@ -30,7 +30,7 @@ void main(void)
 	fs_module_init();
 
 	//Init BLE module
-	//ble_module_init();
+	ble_module_init();
 
 	
 	while (1)

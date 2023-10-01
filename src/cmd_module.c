@@ -288,7 +288,9 @@ static void cmd_init(void)
     // pc_smp_image_upload();
     
     k_sleep(K_MSEC(5000));
-    send_cmdif_cmd_reset_rp();
+    //rp_set_boot_ctrl();
+    //send_cmdif_cmd_reset_rp();
+    //k_sleep(K_MSEC(3000));
     //pc_smp_get_image_state();
 }
 
