@@ -46,9 +46,9 @@ static void button_isr_user(const struct device *port,
     printk("User Button Pressed\n");
 }
 
-void rp_set_boot_ctrl(int val)
+void rp_set_boot_ctrl_on(void)
 {
-    gpio_pin_set_dt(&boot_ctrl_gpio, val);
+    gpio_pin_set_dt(&boot_ctrl_gpio, 1);
 }
 
 void hw_thread(int unused1, int unused2, int unused3)

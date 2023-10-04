@@ -22,6 +22,8 @@
 #include <zephyr/mgmt/mcumgr/grp/os_mgmt/os_mgmt.h>
 #include <zephyr/mgmt/mcumgr/grp/os_mgmt/os_mgmt_client.h>
 
+#include "hw_module.h"
+
 // #include "pc_smp_uart_client.h"
 
 #define UART_MTU_SIZE 128
@@ -49,6 +51,7 @@ static struct net_buf *buf[5];
 
 static struct smp_transport smpt_test;
 static struct smp_client_transport_entry smp_client_transport;
+struct mcumgr_image_state res_buf;
 
 #define SMP_RESPONSE_WAIT_TIME 3
 
@@ -144,7 +147,7 @@ void pc_smp_image_upload(void)
 {
     int rc = 0;
     struct mcumgr_image_upload response;
-    
+
     setup_smp_client();
     rc = img_mgmt_client_upload_init(&img_client, TEST_IMAGE_SIZE, TEST_IMAGE_NUM, image_hash);
 
@@ -154,14 +157,19 @@ void pc_smp_image_upload(void)
 void pc_smp_get_image_state(void)
 {
     int rc = 0;
-    struct mcumgr_image_state res_buf;
 
     setup_smp_client();
+
     rc = img_mgmt_client_state_read(&img_client, &res_buf);
-    
+
     printk("Image state: %d\n", res_buf.image_list_length);
 
-    for(int i=0; i<res_buf.image_list_length; i++)
+    if (res_buf.image_list_length == 0)
+    {
+        int i = 0;
+        printk("Single Image %d: %d %s %s \n", i, res_buf.image_list[i].img_num, res_buf.image_list[i].hash, res_buf.image_list[i].version);
+    }
+    for (int i = 0; i < res_buf.image_list_length; i++)
     {
         printk("Image %d: %d %s %s \n", i, res_buf.image_list[i].img_num, res_buf.image_list[i].hash, res_buf.image_list[i].version);
     }
@@ -186,6 +194,18 @@ void smp_mcu_reset(void)
     {
         printk("Reset successful\n");
     }
+}
+
+void pc_smp_boot_rp(void)
+{
+    rp_set_boot_ctrl_on();
+    k_sleep(K_MSEC(500));
+    send_cmdif_cmd_reset_rp();
+    k_sleep(K_MSEC(500));
+
+    // Device should now be in Serial Recovery mode
+
+    // pc_smp_get_image_state();
 }
 
 /*void smp_uart_send_cmd(uint8_t group_id, uint8_t op_id, uint8_t cmd_id)

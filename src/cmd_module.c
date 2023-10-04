@@ -288,8 +288,10 @@ static void cmd_init(void)
     // pc_smp_image_upload();
     
     k_sleep(K_MSEC(5000));
-    send_cmdif_cmd_reset_rp();
-    //pc_smp_get_image_state();
+
+    //pc_smp_boot_rp();
+    pc_smp_get_image_state();
+    
 }
 
 void cmd_thread(void)
@@ -325,14 +327,12 @@ void cmd_thread(void)
         {
             printk("Recd Unknown Data\n");
         }
-
-
-
+    
         k_sleep(K_MSEC(1000));
     }
 }
 
-#define CMD_THREAD_STACKSIZE 4096
+#define CMD_THREAD_STACKSIZE 8192
 #define CMD_THREAD_PRIORITY 7
 
 K_THREAD_DEFINE(cmd_thread_id, CMD_THREAD_STACKSIZE, cmd_thread, NULL, NULL, NULL, CMD_THREAD_PRIORITY, 0, 0);

@@ -20,7 +20,6 @@
 		 zephyr,shell-uart = &uart0;
 		 zephyr,flash = &flash0;
 		 zephyr,uart-mcumgr = &uart1;
-
 	 };
 
 	aliases {
